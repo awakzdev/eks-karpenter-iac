@@ -1,0 +1,57 @@
+deploymentMode: SingleBinary
+
+loki:
+  auth_enabled: false
+  commonConfig:
+    replication_factor: 1
+  limits_config:
+    retention_period: 672h
+  schemaConfig:
+    configs:
+      - from: "2024-04-01"
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+  storage:
+    type: s3
+    bucketNames:
+      chunks: ${storage_chunks_bucket_name}
+      ruler: ${storage_ruler_bucket_name}
+      admin: ${storage_ruler_bucket_name}
+    s3:
+      region: ${aws_region}
+      s3ForcePathStyle: false
+
+backend:
+  replicas: 0
+
+chunksCache:
+  enabled: false
+
+gateway:
+  enabled: false
+
+minio:
+  enabled: false
+
+monitoring:
+  selfMonitoring:
+    enabled: false
+  serviceMonitor:
+    enabled: true
+
+read:
+  replicas: 0
+
+singleBinary:
+  replicas: 1
+  persistence:
+    enabled: true
+    size: 50Gi
+    storageClass: gp3
+
+write:
+  replicas: 0
